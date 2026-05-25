@@ -1,0 +1,168 @@
+/* Custom styles to complement Bootstrap with premium aesthetics */
+body {
+    min-height: 100vh;
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Modern Gradient Dark Background */
+body.bg-dark {
+    background: radial-gradient(circle at 10% 20%, rgb(18, 18, 26) 0%, rgb(28, 28, 40) 90%) !important;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Add glowing aura in background */
+body.bg-dark::before {
+    content: '';
+    position: absolute;
+    top: -150px;
+    left: -150px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(108, 92, 231, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+body.bg-dark::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    right: -150px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 184, 148, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Glassmorphism Card Style */
+.glass-card {
+    background: rgba(30, 30, 45, 0.65) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5) !important;
+    padding: 2.5rem !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 45px 0 rgba(108, 92, 231, 0.15), 0 12px 40px 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Custom form labels */
+.form-label {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 0.5rem;
+}
+
+/* Glass styled inputs */
+.glass-input {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+    padding: 0.75rem 1rem !important;
+    font-weight: 400;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-input:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: #a29bfe !important;
+    box-shadow: 0 0 15px rgba(162, 155, 254, 0.4) !important;
+    outline: none;
+}
+
+.glass-input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+/* Aesthetic Linear Gradient Buttons */
+.btn-aesthetic-primary {
+    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%) !important;
+    border: none !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px;
+    border-radius: 10px !important;
+    padding: 0.8rem 1.5rem !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-aesthetic-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4) !important;
+    filter: brightness(1.1);
+}
+
+.btn-aesthetic-primary:active {
+    transform: translateY(0);
+}
+
+.btn-aesthetic-success {
+    background: linear-gradient(135deg, #00b894 0%, #55efc4 100%) !important;
+    border: none !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px;
+    border-radius: 10px !important;
+    padding: 0.8rem 1.5rem !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-aesthetic-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 184, 148, 0.4) !important;
+    filter: brightness(1.1);
+}
+
+.btn-aesthetic-success:active {
+    transform: translateY(0);
+}
+
+/* Modernized Navbar */
+.navbar-custom {
+    background: rgba(25, 25, 35, 0.8) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Style flash messages */
+.alert {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.alert-danger {
+    background: rgba(235, 94, 85, 0.2) !important;
+    color: #ff7675 !important;
+    border: 1px solid rgba(235, 94, 85, 0.3) !important;
+}
+
+.alert-success {
+    background: rgba(0, 184, 148, 0.2) !important;
+    color: #55efc4 !important;
+    border: 1px solid rgba(0, 184, 148, 0.3) !important;
+}
+
+/* Modern Link Styling */
+.aesthetic-link {
+    color: #a29bfe !important;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.aesthetic-link:hover {
+    color: #81ecec !important;
+    text-decoration: underline;
+}
