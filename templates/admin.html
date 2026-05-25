@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Admin Dashboard</h2>
+        <div class="card bg-secondary text-light">
+            <div class="card-body">
+                <h5 class="card-title">Registered Users</h5>
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Last Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <span
+                                        class="badge {% if user.role == 'admin' %}bg-danger{% else %}bg-primary{% endif %}">
+                                        {{ user.role }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if user.is_blocked %}
+                                    <span class="badge bg-danger">Blocked</span>
+                                    {% elif user.is_currently_online %}
+                                    <span class="badge bg-success">Online</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Offline</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.last_seen_formatted }}</td>
+                                <td>
+                                    {% if user.id != current_user.id %}
+                                    <form action="{{ url_for('toggle_block', user_id=user.id) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-sm {% if user.is_blocked %}btn-success{% else %}btn-warning{% endif %}">
+                                            {% if user.is_blocked %}Unblock{% else %}Block{% endif %}
+                                        </button>
+                                    </form>
+                                    <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST"
+                                        class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
+                                    </form>
+                                    {% else %}
+                                    <button class="btn btn-sm btn-secondary" disabled>Current User</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

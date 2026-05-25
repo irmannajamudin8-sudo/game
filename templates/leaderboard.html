@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        min-height: 100vh;
+    }
+
+    .lb-hero {
+        text-align: center;
+        padding: 32px 0 16px;
+    }
+
+    .lb-hero h1 {
+        font-size: 2.8rem;
+        font-weight: 900;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        background-size: 200% auto;
+        animation: shimmer 2s linear infinite;
+        margin-bottom: 6px;
+    }
+
+    @keyframes shimmer {
+        0%   { background-position: 0% center; }
+        100% { background-position: 200% center; }
+    }
+
+    .lb-hero p {
+        color: #aaa;
+        font-size: 1rem;
+    }
+
+    /* Tabs */
+    .lb-tabs {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin: 20px 0 24px;
+        flex-wrap: wrap;
+    }
+
+    .lb-tab {
+        padding: 8px 22px;
+        border-radius: 30px;
+        border: 2px solid rgba(255,215,0,0.3);
+        color: #bbb;
+        background: rgba(255,255,255,0.05);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s;
+        user-select: none;
+    }
+
+    .lb-tab:hover, .lb-tab.active {
+        background: rgba(255,215,0,0.15);
+        border-color: #ffd700;
+        color: #ffd700;
+    }
+
+    /* Panel */
+    .lb-panel { display: none; }
+    .lb-panel.active { display: block; }
+
+    /* Table card */
+    .lb-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        margin-bottom: 24px;
+    }
+
+    .lb-card table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #ddd;
+    }
+
+    .lb-card thead th {
+        background: rgba(255,215,0,0.12);
+        color: #ffd700;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 12px 16px;
+        border-bottom: 1px solid rgba(255,215,0,0.2);
+    }
+
+    .lb-card tbody tr {
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        transition: background 0.15s;
+    }
+
+    .lb-card tbody tr:hover {
+        background: rgba(255,255,255,0.06);
+    }
+
+    .lb-card tbody tr.mine {
+        background: rgba(100, 200, 255, 0.07);
+        border-left: 3px solid #4fc3f7;
+    }
+
+    .lb-card tbody td {
+        padding: 11px 16px;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    /* Rank badge */
+    .rank {
+        font-weight: 800;
+        font-size: 16px;
+        width: 36px;
+        text-align: center;
+    }
+
+    .rank-1 { color: #ffd700; }
+    .rank-2 { color: #c0c0c0; }
+    .rank-3 { color: #cd7f32; }
+
+    .trophy { font-size: 22px; }
+
+    /* Score pill */
+    .score-pill {
+        background: rgba(255,215,0,0.15);
+        border: 1px solid rgba(255,215,0,0.4);
+        border-radius: 20px;
+        padding: 3px 12px;
+        color: #ffd700;
+        font-weight: 700;
+        font-size: 14px;
+        display: inline-block;
+    }
+
+    /* Level badge */
+    .level-badge {
+        background: rgba(76,175,80,0.15);
+        border: 1px solid rgba(76,175,80,0.4);
+        border-radius: 12px;
+        padding: 2px 10px;
+        color: #81c784;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* Username */
+    .uname { font-weight: 700; color: #fff; }
+    .uname.me { color: #4fc3f7; }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: #666;
+    }
+
+    .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+
+    /* Live badge */
+    .live-badge {
+        display: inline-block;
+        background: #e53935;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        padding: 2px 7px;
+        border-radius: 20px;
+        animation: pulse-live 1.5s infinite;
+        vertical-align: middle;
+        margin-left: 6px;
+    }
+
+    @keyframes pulse-live {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.5; }
+    }
+
+    /* Refresh btn */
+    #refresh-lb {
+        background: none;
+        border: 1px solid rgba(255,255,255,0.2);
+        color: #aaa;
+        border-radius: 8px;
+        padding: 4px 14px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-left: 10px;
+    }
+    #refresh-lb:hover { border-color: #ffd700; color: #ffd700; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="lb-hero">
+    <h1>🏆 Leaderboard</h1>
+    <p>Siapa yang paling jago? Cek peringkatmu di sini!</p>
+</div>
+
+<!-- Tabs -->
+<div class="lb-tabs">
+    <div class="lb-tab active" onclick="showTab('best')">👑 Best Score</div>
+    <div class="lb-tab" onclick="showTab('recent')">🕒 Riwayat Terbaru</div>
+    <div class="lb-tab" onclick="showTab('mine')">🎮 Skorku</div>
+</div>
+
+<!-- ── Tab 1: Best score per user ── -->
+<div id="tab-best" class="lb-panel active">
+    <div class="lb-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>Best Score</th>
+                    <th>Level Dicapai</th>
+                    <th>Deaths</th>
+                    <th>Waktu</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if best_per_user %}
+                    {% for row in best_per_user %}
+                    <tr class="{{ 'mine' if row.username == current_user.username }}">
+                        <td class="rank rank-{{ loop.index }}">
+                            {% if loop.index == 1 %}🥇
+                            {% elif loop.index == 2 %}🥈
+                            {% elif loop.index == 3 %}🥉
+                            {% else %}<span style="color:#666">{{ loop.index }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="uname {{ 'me' if row.username == current_user.username }}">
+                                {{ row.username }}
+                                {% if row.username == current_user.username %}
+                                    <span style="color:#4fc3f7;font-size:11px">(kamu)</span>
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td><span class="score-pill">{{ row.best | int }}</span></td>
+                        <td><span class="level-badge">Level {{ row.level }}</span></td>
+                        <td style="color:#ff7070">💀 {{ row.deaths }}</td>
+                        <td style="color:#888;font-size:12px">
+                            {% set diff = (now - row.created_at).total_seconds() %}
+                            {% if diff < 60 %}Just now
+                            {% elif diff < 3600 %}{{ (diff // 60) | int }}m ago
+                            {% elif diff < 86400 %}{{ (diff // 3600) | int }}h ago
+                            {% else %}{{ (diff // 86400) | int }}d ago
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr><td colspan="6">
+                        <div class="empty-state">
+                            <div class="emoji">🎮</div>
+                            <p>Belum ada yang main. Jadilah yang pertama!</p>
+                        </div>
+                    </td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ── Tab 2: Recent scores ── -->
+<div id="tab-recent" class="lb-panel">
+    <div class="lb-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>Score</th>
+                    <th>Level</th>
+                    <th>Deaths</th>
+                    <th>Waktu</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if top_scores %}
+                    {% for score_row, username in top_scores %}
+                    <tr class="{{ 'mine' if username == current_user.username }}">
+                        <td style="color:#666;font-weight:700">{{ loop.index }}</td>
+                        <td>
+                            <span class="uname {{ 'me' if username == current_user.username }}">
+                                {{ username }}{% if username == current_user.username %} <span style="color:#4fc3f7;font-size:11px">(kamu)</span>{% endif %}
+                            </span>
+                        </td>
+                        <td><span class="score-pill">{{ score_row.score }}</span></td>
+                        <td><span class="level-badge">Level {{ score_row.level }}</span></td>
+                        <td style="color:#ff7070">💀 {{ score_row.deaths }}</td>
+                        <td style="color:#888;font-size:12px">{{ score_row.created_formatted }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr><td colspan="6">
+                        <div class="empty-state">
+                            <div class="emoji">🎮</div>
+                            <p>Belum ada skor. Ayo main dulu!</p>
+                        </div>
+                    </td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ── Tab 3: My scores ── -->
+<div id="tab-mine" class="lb-panel">
+    <div class="lb-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Score</th>
+                    <th>Level Dicapai</th>
+                    <th>Deaths</th>
+                    <th>Waktu</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if my_scores %}
+                    {% for s in my_scores %}
+                    <tr>
+                        <td style="color:#666;font-weight:700">{{ loop.index }}</td>
+                        <td><span class="score-pill">{{ s.score }}</span></td>
+                        <td><span class="level-badge">Level {{ s.level }}</span></td>
+                        <td style="color:#ff7070">💀 {{ s.deaths }}</td>
+                        <td style="color:#888;font-size:12px">{{ s.created_formatted }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr><td colspan="5">
+                        <div class="empty-state">
+                            <div class="emoji">🎯</div>
+                            <p>Belum ada skor kamu. Main dulu yuk!</p>
+                            <a href="{{ url_for('game') }}" class="btn btn-sm" style="background:#ffd700;color:#000;font-weight:700;margin-top:8px">Main Sekarang</a>
+                        </div>
+                    </td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function showTab(name) {
+    document.querySelectorAll('.lb-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+}
+</script>
+{% endblock %}
